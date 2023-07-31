@@ -38,7 +38,7 @@ class DatabaseSeeder extends Seeder
 
         $super_user = User::factory()->create([
         'name' => 'Martijn Schippers',
-        'email' => 'martijn.schippers2@gmail.com',
+        'email' => 'martijn@martijn.com',
         'password' => bcrypt('password123')
         ]);
 
