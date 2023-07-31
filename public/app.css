@@ -1,0 +1,57 @@
+h1 {
+    font-size: 32px;
+}
+
+.button {
+    padding: 10px;
+    margin: 10px;
+    border: 1px solid;
+    min-width: 100px;
+}
+
+.button-group {
+    width: 100%;
+    padding-top: 10px;
+    border-top: 1px solid grey;
+    display: flex;
+    justify-content: space-around;
+}
+
+.container {
+    max-width: 1200px;
+    margin: auto;
+}
+
+.course-item {
+    /* properties as child */
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    /* box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px; */
+    width: 400px;
+    height: 400px;
+    overflow: hidden;
+    border-radius: 20px;
+    margin: 100px;
+    padding: 0 40px 0;
+
+    /* flexbox properties as parent*/
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.course-item-admin {
+    margin-top: 40px;
+    width: 100%;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.course-item-admin h1 {
+    font-size: 32px;
+}
+
+.course-items {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
