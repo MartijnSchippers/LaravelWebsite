@@ -43,9 +43,14 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public function courses()
+    public function giveAccessToPublication($publicationId)
     {
-        return $this->belongsToMany(Course::class, 'courses_users');//, 'courses_users', 'course_id', 'user_id');
+        $this->availablePublications()->attach($publicationId);
+    }
+
+    public function availablePublications()
+    {
+        return $this->belongsToMany(Publication::class, 'publication_user');//, 'courses_users', 'course_id', 'user_id');
     }
 
     public function isAdmin() :bool
@@ -56,6 +61,16 @@ class User extends Authenticatable
     public function admin()
     {
         return $this->hasOne(Admin::class, 'user_id');
+    }
+
+    public function hasPublication($publicationId) :bool
+    {
+        return ($this->publications()->where('id', $publicationId)->exists());
+    }
+
+    public function publications()
+    {
+        return $this->belongsToMany(Publication::class, 'publication_user', 'user_id', 'publication_id');
     }
 
 }

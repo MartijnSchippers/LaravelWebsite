@@ -4,9 +4,12 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CoursesController;
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PublificationController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\UsersController;
+use App\Models\AdminNotification;
 use App\Models\Course;
 use App\Models\Publification;
 use Illuminate\Support\Facades\Route;
@@ -38,40 +41,31 @@ Route::prefix('/courses')->group(function () {
     Route::get('/', [CoursesController::class, 'show'])->name('show-courses')->middleware('auth');
     Route::post('/', [CartController::class, 'addToCart'])->name('addToCart')->middleware('auth');
     Route::get('/make-course', [CourseController::class, 'makeCourse'])->name('make-course')->middleware('admin');
-    Route::post('/make-course', [CourseController::class, 'saveCourse'])->name('save-course')->middleware('admin');
+    Route::post('/make-course', [CourseController::class, 'postCourse'])->name('post-course')->middleware('admin');
 });
 
 
 Route::prefix('/courses/{slug}')->middleware('auth')->group(function () {
 
-    Route::get('/', function ($slug) {
-        $course = Course::where('slug', $slug)->firstOrFail();
-        return view('course', ['course' => $course]);
-    });
-
-    Route::get('/edit', function ($slug) {
-        $course = Course::where('slug', $slug)->firstOrFail();
-        return view('course-edit', ['course' => $course]);
-    });
+    Route::get('/', [CourseController::class, 'showCourse'])->name('this-course');
+    Route::get('/edit', [CourseController::class, 'editCourse'])->name('edit-course')->middleware('admin');
+    Route::post('/save', [CourseController::class, 'saveCourse'])->name('save-course')->middleware('admin');
+    Route::post('/publish-course', [CourseController::class, 'editPublishStatus'])->name('publish-course')->middleware('admin');
 
     Route::prefix('/users')->middleware('admin')->group(function () {
-        Route::get('/', [CourseController::class, 'manageUsers']); // Remove $slug parameter here
-        Route::post('/add', [CourseController::class, 'addUser']); // Remove $slug parameter here
+        Route::get('/', [CourseController::class, 'manageUsers'])->name('manage-users');
+        Route::post('/add', [CourseController::class, 'addUser'])->name('add-user');
     });
-
-    Route::post('/publish-course', [CourseController::class, 'editPublishStatus'])->name('publish-course')->middleware('admin');
 });
 
 
 Route::Get('/my-cart', [CartController::class, 'viewCartItems'])->name('my cart');
 
 Route::get('/my-courses', function () {
-    return view('my-courses', ['courses' => auth()->user()->courses]);
+    return view('my-courses', ['publications' => auth()->user()->availablePublications]);
 })->middleware('auth')->name('my courses');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'view'])->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

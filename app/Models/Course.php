@@ -17,6 +17,16 @@ class Course extends Model
         'slug'
     ];
 
+    // public static function getCourseFromSlug($slug)
+    // {
+    //     return Course::where('slug', $slug)->firstOrFail();
+    // }
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
+
     public function hasUser($userId): bool
     {
         return ($this->belongsToMany(User::class, 'courses_users', 'course_id', 'user_id')->get()->contains('id', $userId));
@@ -32,9 +42,9 @@ class Course extends Model
         return $this->belongsToMany(User::class, 'courses_users', 'course_id', 'user_id');
     }
 
-    public function publification()
+    public function publication()
     {
-        return $this->hasOne(Publification::class);
+        return $this->hasOne(Publication::class);
     }
 
     public function publish()
@@ -44,7 +54,7 @@ class Course extends Model
            // return error code if the course already exists
             return ["failed to publish course: course already is published"];
             
-        publification::create(['course_id' => $this->id, 'price' => 0]);
+        Publication::create(['course_id' => $this->id, 'price' => 0, 'is_active' => 1]);
         return ["The course is succesfully published!"];
     }
 
@@ -55,12 +65,20 @@ class Course extends Model
             return ["The course already is unpublished"];
 
         // Unpublish the course
-        $this->hasOne(Publification::class)->delete();
+        $this->hasOne(Publication::class)->delete();
         return ["The course is succesfully unpublished!"];
     }
 
     public function hasPublication() :bool
     {
-        return ( $this->hasOne(Publification::class)->exists() );
+        return ( $this->hasOne(Publication::class)->exists() );
+    }
+
+    public function getPublicationOrFail()
+    {
+        $publication = $this->publication;
+        if ($publication != null)
+            return $publication;
+        abort(404);
     }
 }

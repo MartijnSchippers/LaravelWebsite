@@ -11,10 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('publifications', function (Blueprint $table) {
+        Schema::create('admin_notifications', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('course_id')->unique()->constrained();
-            $table->float('price');
+            $table->string('message');
             $table->timestamps();
         });
     }

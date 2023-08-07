@@ -5,12 +5,12 @@
 
     <div class="container">
         <div class="course-items">
-            @foreach ($courses as $course)
+            @foreach ($publications as $publication)
                 <div class="course-item">
                     <!-- <img src="" alt=""> -->
-                    <h1>{{ $course->title }}</h1>
-                    <p>{{ $course->excerpt }}</p>
-                    <a class="button" href="courses/{{ $course->slug }}"> View here </a>
+                    <h1>{{ $publication->course->title }}</h1>
+                    <p>{{ $publication->course->excerpt }}</p>
+                    <a class="button" href="courses/{{ $publication->course->slug }}"> View here </a>
                 </div>
             @endforeach
         </div>

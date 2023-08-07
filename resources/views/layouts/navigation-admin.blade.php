@@ -40,19 +40,15 @@
                     </x-slot>
 
                     <x-slot name="content">
-                        @if (auth()->user()->isAdmin())
-                            
-                        @else
-                            <x-dropdown-link :href="route('my cart')">
-                                {{ __('My cart') }}
-                            </x-dropdown-link>
-                            <x-dropdown-link :href="route('my admin')">
-                                {{ __('My admin') }}
-                            </x-dropdown-link>
-                            <x-dropdown-link :href="route('profile.edit')">
-                                {{ __('Profile') }}
-                            </x-dropdown-link>
-                        @endif
+                        <x-dropdown-link :href="route('my cart')">
+                            {{ __('My cart') }}
+                        </x-dropdown-link>
+                        <x-dropdown-link :href="route('my admin')">
+                            {{ __('My admin') }}
+                        </x-dropdown-link>
+                        <x-dropdown-link :href="route('profile.edit')">
+                            {{ __('Profile') }}
+                        </x-dropdown-link>
 
                         <!-- Authentication -->
                         <form method="POST" action="{{ route('logout') }}">

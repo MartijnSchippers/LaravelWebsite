@@ -37,6 +37,11 @@
             <!-- Page Content -->
             <main>
                 {{ $slot }}
+                @if (session()->has('success'))
+                    <div class="flash-message">
+                        {{ session()->get('success') }}
+                    </div>
+                @endif
             </main>
         </div>
     </body>

@@ -11,42 +11,46 @@ use Illuminate\Validation\ValidationException;
 
 class CourseController extends Controller
 {
-    private function getCourseFromSlug($slug) :Course 
+    public function getCourseFromSlug($slug)
     {
         return Course::where('slug', $slug)->firstOrFail();
     }
-    
-    public function manageUsers($slug)
+
+    public function edit($course)
     {
-        $course = $this->getCourseFromSlug($slug);
-        $users = $course->users;
-        return view('admin.course-users', ['course' => $course, 'users' => $users]);
+        return view('course-edit', ['course' => $course]);
     }
 
-    public function addUser(Request $request, string $slug)
+    public function manageUsers(Course $course)
+    {
+        $publication = $course->getPublicationOrFail();
+        $users = $publication->users;
+        return view('admin.course-users', ['course' => $publication->course, 'users' => $users]);
+    }
+
+    public function addUser(Request $request, Course $course)
     {
         $userId = $request->input('user_id');
         $user = User::findOrFail($userId);
-        $course = $this->getCourseFromSlug($slug);
-        
+        $publication = $course->getPublicationOrFail();
         // check if user already is in course
-        if ($course->hasUser($userId))
+        dd($publication);
+        if ($publication->hasUser($userId))
             return ["User already registered in this course"];
 
         // add user in course
-        CoursesUser::create(
-            [
-                'user_id' => $userId,
-                'course_id' => $course->id
-            ]
-        );
+        $user->giveAccessToPublication($publication->id);
         
         return ["Success!"];
     }
 
-    public function editPublishStatus(Request $request, string $slug)
+    public function editCourse(Course $course)
     {
-        $course = $this->getCourseFromSlug($slug);
+        return view('admin.edit-course', ['course' => $course]);
+    }
+
+    public function editPublishStatus(Request $request, $course)
+    {
         $code = $request->input("course-status");
         if ($code == 1)
             return $course->publish();
@@ -59,7 +63,7 @@ class CourseController extends Controller
         return view('admin.make-course');
     }
 
-    public function saveCourse(Request $request)
+    public function postCourse(Request $request)
     {
         $validated = $request->validate([
             'title' => 'required|unique:courses|max:255',
@@ -70,6 +74,30 @@ class CourseController extends Controller
 
         Course::create($request->all());
 
+        session()->flash('success', 'succesfully posted a new course');
+
         return view('admin.make-course');
+    }
+
+    public function saveCourse(Request $request, Course $course)
+    {
+        $validated = $request->validate([
+            'title' => 'required|max:255|unique:courses,title,' . $course->id,
+            'excerpt' => 'required|unique:courses,excerpt,' . $course->id,
+            'slug' => 'required|unique:courses,slug,' .  $course->id,
+            'body' => 'required'
+        ]);
+
+        $course->update($request->all());
+
+        return ["successfully updated the course"];
+    }
+
+    public function showCourse(Request $request, Course $course)
+    {
+        if (($course->hasPublication() && auth()->user()->hasPublication($course->publication->id))
+            || auth()->user()->isAdmin())
+            return view('course', ["course" => $course]);
+        abort(404);
     }
 }

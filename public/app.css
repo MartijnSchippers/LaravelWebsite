@@ -2,6 +2,16 @@ h1 {
     font-size: 32px;
 }
 
+textarea {
+    width: 100%;
+    height: 300px;
+}
+
+.build-course {
+    display: flex;
+    flex-direction: column;
+}
+
 .button {
     padding: 10px;
     margin: 10px;
@@ -54,4 +64,29 @@ h1 {
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
+}
+
+.flash-message {
+    position: fixed;
+    background: lightgreen;
+    width: 200px;
+    bottom: 0;
+    right: 0;
+    padding: 1em;
+    margin: 1em;
+}
+
+.input {
+    width: 100%;
+}
+
+.notifications {
+    width: 100%;
+}
+
+.notification {
+    width: 100%;
+    border: 1px solid grey;
+    border-radius: 5px;
+    padding: 1em;
 }

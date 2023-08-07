@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Course;
-use App\Models\Publification;
+use App\Models\Publication;
 use Illuminate\Http\Request;
 
 
@@ -14,7 +14,7 @@ class CoursesController extends Controller
         if (auth()->user()->isAdmin())
             return view('admin.courses', ['courses' => Course::all()]);
         
-        return view('courses', ['publifications' => Publification::all()]);
+        return view('courses', ['publifications' => Publication::all()]);
     }
 
 

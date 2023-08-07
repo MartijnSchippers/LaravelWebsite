@@ -5,9 +5,10 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use \App\Models\User;
 use \App\Models\Admin;
+use \App\Models\AdminNotification;
 use \App\Models\Course;
 use \App\Models\CoursesUser;
-use \App\Models\Publification;
+use \App\Models\Publication;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -36,14 +37,14 @@ class DatabaseSeeder extends Seeder
         'password' => bcrypt('password123')
         ]);
 
-        $super_user = User::factory()->create([
+        $martijn = User::factory()->create([
         'name' => 'Martijn Schippers',
         'email' => 'martijn@martijn.com',
         'password' => bcrypt('password123')
         ]);
 
         $admin = Admin::create([
-            'user_id' => $super_user->id
+            'user_id' => $martijn->id
         ]);
         
         // create courses
@@ -71,36 +72,26 @@ class DatabaseSeeder extends Seeder
             'slug' => 'lorum-ipsum3'
         ]);
 
-        // add users to courses
-        CoursesUser::create([
+        // Make course a publication
+        Publication::create([
             'course_id' => $c1->id,
-            'user_id' => $user_1->id
+            'price' => 999.99,
+            'is_active' => 1
         ]);
 
-        CoursesUser::create([
-            'course_id' => $c1->id,
-            'user_id' => $super_user->id
-        ]);
-
-
-        CoursesUser::create([
+        Publication::create([
             'course_id' => $c2->id,
-            'user_id' => $user_1->id
+            'price' => 800.00,
+            'is_active' => 0
         ]);
 
-        CoursesUser::create([
-            'course_id' => $c3->id,
-            'user_id' => $user_1->id
-        ]);
+        // give users access to publications
+        $user_1->giveAccessToPublication($c1->id);
+        $user_2->giveAccessToPublication($c2->id);
 
-        Publification::create([
-            'course_id' => $c1->id,
-            'price' => 999.99
-        ]);
-
-        Publification::create([
-            'course_id' => $c2->id,
-            'price' => 800.00
+        // create notifications about users having access
+        AdminNotification::create([
+            'message' => 'Welcome, the system is ready for action'
         ]);
     }
 }

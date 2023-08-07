@@ -4,7 +4,7 @@
     </x-slot>
 
     <div class="container">
-        <form action="{{ route('save-course') }}" method="post">
+        <form action="{{ route('post-course') }}" method="post">
             @csrf
             <lable>title</label>
             <input type="text" name="title" placeholder="title of the post" value="{{ old('title') }}"></input>

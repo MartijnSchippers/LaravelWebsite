@@ -16,7 +16,7 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
                     <x-nav-link :href="route('show-courses')" :active="request()->routeIs('show-courses')">
-                        Courses
+                        Explore Courses
                     </x-nav-link>
                     @if (! auth()->user()->isAdmin() )
                         <x-nav-link :href="route('my courses')" :active="request()->routeIs('my courses')">
@@ -44,9 +44,6 @@
                     <x-slot name="content">
                         <x-dropdown-link :href="route('my cart')">
                             {{ __('My cart') }}
-                        </x-dropdown-link>
-                        <x-dropdown-link :href="route('my admin')">
-                            {{ __('My admin') }}
                         </x-dropdown-link>
                         <x-dropdown-link :href="route('profile.edit')">
                             {{ __('Profile') }}
